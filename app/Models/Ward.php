@@ -10,9 +10,10 @@ class Ward extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'lga_id',
+        'l_g_a_id',
     ];
-    public function state()
+    public $timestamps = false;
+    public function l_g_a()
     {
         return $this->belongsTo(LGA::class);
     }

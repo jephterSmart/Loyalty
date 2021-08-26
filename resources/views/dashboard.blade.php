@@ -56,7 +56,15 @@
                         @endforeach
                     </ul>
                 </div>
-                $endif
+                @endif
+                <div class="flex items-center justify-end mt-4">
+                <a href='/dashboard/register'>
+
+                <x-button class="ml-4" >
+                    {{ __('Register a Citizen') }}
+                </x-button>
+                </a>
+            </div>
             </div>
         </div>
     </div>

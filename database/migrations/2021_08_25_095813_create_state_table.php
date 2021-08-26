@@ -11,9 +11,10 @@ class CreateStateTable extends Migration
      *
      * @return void
      */
+    
     public function up()
     {
-        Schema::create('state', function (Blueprint $table) {
+        Schema::create('states', function (Blueprint $table) {
             $table->id();
             $table->string('name');
         });

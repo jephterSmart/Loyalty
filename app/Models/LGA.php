@@ -12,6 +12,8 @@ class LGA extends Model
         'name',
         'state_id'
     ];
+    protected $tableName ='l_g_a_s';
+    public $timestamps = false;
     public function wards()
     {
         return $this->hasMany(Ward::class);

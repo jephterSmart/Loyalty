@@ -13,11 +13,11 @@ class CreateWardTable extends Migration
      */
     public function up()
     {
-        Schema::create('ward', function (Blueprint $table) {
+        Schema::create('wards', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->bigInteger('lga_id')->unsigned()->index();
-            $table->foreign('lga_id')->references('id')->on('lga');
+            $table->bigInteger('l_g_a_id')->unsigned()->index();
+            $table->foreign('l_g_a_id')->references('id')->on('l_g_a_s');
         });
     }
 

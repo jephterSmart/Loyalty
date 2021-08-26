@@ -11,7 +11,8 @@ class State extends Model
     protected $fillable = [
         'name'
     ];
-    public function lga()
+    public $timestamps = false;
+    public function l_g_a_s()
     {
         return $this->hasMany(LGA::class);
     }

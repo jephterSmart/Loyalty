@@ -13,7 +13,7 @@ class CreateCitizenTable extends Migration
      */
     public function up()
     {
-        Schema::create('citizen', function (Blueprint $table) {
+        Schema::create('citizens', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('gender');
@@ -23,7 +23,7 @@ class CreateCitizenTable extends Migration
             $table->bigInteger('user_id')->unsigned()->index();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('ward_id')->references('id')->on('ward');
+            $table->foreign('ward_id')->references('id')->on('wards');
         });
     }
 

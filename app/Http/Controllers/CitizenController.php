@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
+
 use App\Models\Citizen;
 use App\Models\State;
 use App\Models\Ward;
@@ -18,66 +20,81 @@ class CitizenController extends Controller
             'address' => 'required|string|min:5',
             'phone' => 'required|string|min:10|max:14'
         ]);
-        $user = User::create([
+        $user = Citizen::create([
             'name'=> $fields['name'],
             'gender' => $fields['gender'],
             'address' => $fields['address'],
             'phone' => $fields['phone'],
-            'ward_id' => $fields['ward_id']
+            'ward_id' => $request->input('ward'),
+            'user_id' => auth()->user()->id
         ]);
        
         // $response = [
         //     'user' => $user,
         //     'message' => 'User is succesfully created'
         // ];
-        return $request->redirect('dashboard');
+        return redirect('/dashboard');
     }
     public function register(){
-        return view('register');
+        $states = State::all();
+        $newStates = [];
+        foreach($states as $state){
+            $newStates[$state->id] = ['state'=>$state, 'lgas' => $state->l_g_a_s()];
+        }
+    //     foreach($newStates as $stateId => $stateArr)
+    //      foreach($stateArr['lgas']->get() as $lga)
+    //         echo $lga;
+       
+    //    dd($newStates);
+        return view('register', ['states'=> $newStates]);
     }
     public function index()
     {
-        $country = Citizen::get()->count();
+        $country = Citizen::all()->count();
         if(!$country ){
             return view('dashboard',[]);
         }
-        $states = State::get();
-        $lgas = LGA::get();
-        $wards = Ward::get();
-        $countPerState;
+        $states = State::all();
+        
+        $lgas = LGA::all();
+        $wards = Ward::all();
+        $countPerState = [];
          $stateLga;
-         $$lgaWards;
+         $lgaWards;
+         $countPerLGA;
 
         foreach($states as $st){
-           $stateLga[$st] = $st->lgas();
-           foreach($stateLga[$st] as $lga){
-            $lgaWards[$lga] = $lga->wards();
-            foreach($lgaWards[$lga] as $ward){
-                $countPerState[$st] = $countPerLGA[$lga] ? 
-                ($ward->citizens()->count() + $countPerLGA[$lga]) : 0;
+           $stateLga[$st->name] = $st->l_g_a_s();
+           foreach($stateLga[$st->name]->get() as $lga){
+            $lgaWards[$lga->name] = $lga->wards();
+            foreach($lgaWards[$lga->name]->get() as $ward){
+                $countPerState[$st->name] = isset($countPerState[$st->name]) ? 
+                ($ward->citizens()->count() + $countPerState[$st->name]) : 0;
             }
            }
            
         }
-         $countPerLGA;
-        $lgaWards[$lga];
+         $countPerLGA =[];
+        
         foreach($lgas as $lga){
-            $lgaWards[$lga] = $lga->wards();
-            foreach($lgaWards[$lga] as $ward){
-                $countPerLGA[$lga] = $countPerLGA[$lga] ? 
-                ($ward->citizens()->count() + $countPerLGA[$lga]) : 0;
+            $lgaWards[$lga->name] = $lga->wards() ;
+            //This will only show lgas that have registered wards
+            foreach($lgaWards[$lga->name]->get() as $ward){
+                $countPerLGA[$lga->name] = isset($countPerLGA[$lga->name]) ? 
+                ($ward->citizens()->count() + $countPerLGA[$lga->name]) : 0;
             }
         }
-        $countPerWard;
+        $countPerWard = [];
         foreach($wards as $ward){
-            $countPerWard[$ward] = $ward->citizens()->count();
+            $countPerWard[$ward->name] = $ward->citizens()->count();
         }
         $response = [
             'country' => $country,
             'lgas' =>$countPerLGA,
-            'wards' =>$countPerWards,
+            'wards' =>$countPerWard,
             'states' => $countPerState
         ];
+       
         return view('dashboard',$response);
     }
 }

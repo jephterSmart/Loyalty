@@ -13,11 +13,11 @@ class CreateLgaTable extends Migration
      */
     public function up()
     {
-        Schema::create('lga', function (Blueprint $table) {
+        Schema::create('l_g_a_s', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->bigInteger('state_id')->unsigned()->index();;
-            $table->foreign('state_id')->references('id')->on('state');
+            $table->foreign('state_id')->references('id')->on('states');
         });
     }
 
